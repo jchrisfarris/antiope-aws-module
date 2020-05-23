@@ -32,7 +32,7 @@ class ForeignAWSAccount(object):
             self.config = config
 
         # # Save these as attributes
-        self.account_table = config.account_table
+        self.account_table = self.config.account_table
 
         response = self.account_table.query(
             KeyConditionExpression=Key('account_id').eq(self.account_id),

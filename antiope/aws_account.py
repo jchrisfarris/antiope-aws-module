@@ -29,14 +29,14 @@ class AWSAccount(object):
             self.config = config
 
         # # Save these as attributes
-        self.account_table = config.account_table
-        self.vpc_table     = config.vpc_table
-        self.default_session_name = config.role_session_name
+        self.account_table = self.config.account_table
+        self.vpc_table     = self.config.vpc_table
+        self.default_session_name = self.config.role_session_name
 
-        if config.role_name is None:
+        if self.config.role_name is None:
             self.cross_account_role_arn = None
         else:
-            self.cross_account_role_arn = "arn:aws:iam::{}:role/{}".format(self.account_id, config.role_name)
+            self.cross_account_role_arn = "arn:aws:iam::{}:role/{}".format(self.account_id, self.config.role_name)
 
         response = self.account_table.query(
             KeyConditionExpression=Key('account_id').eq(self.account_id),

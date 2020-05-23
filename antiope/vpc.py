@@ -28,8 +28,8 @@ class VPC(object):
             self.config = config
 
         # # Save these as attributes
-        self.account_table = config.account_table
-        self.vpc_table     = config.vpc_table
+        self.account_table = self.config.account_table
+        self.vpc_table     = self.config.vpc_table
 
         # Get the VPC data from the VPC DDB Table. Raise the VPCLookupError if not present
         try:
