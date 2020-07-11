@@ -4,7 +4,7 @@ PIP=pip3
 
 FILES=*.py __init__.py _version.py
 
-PYDOC_FILES=aws_account foreign_aws_account __init__ config vpc
+PYDOC_FILES=aws_account aws_organization foreign_aws_account __init__ config vpc
 
 
 test: $(FILES)
