@@ -28,8 +28,15 @@ class AntiopeConfig(object):
         # * vpc_table (dynamodb.Table resource)
 
         if SSMParam is not None:
-            raise NotImplementedError
-        elif config is not None:
+            try:
+                client = boto3.client('ssm')
+                response = client.get_parameter(Name=SSMParam)
+                config = json.loads(response['Parameter']['Value'])  # config gets passed to the next conditional.
+            except Exception as e:
+                logger.critical(f"Failed to get Antiope Config from SSM Parameter Store: {e}")
+                exit(1)
+
+        if config is not None:
             try:
                 self.account_table_name = config['account_table_name']
                 self.vpc_table_name = config['vpc_table_name']

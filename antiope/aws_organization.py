@@ -48,24 +48,34 @@ class AWSOrganizationMaster(AWSAccount):
         Returns an AWSAccount object for the account that is the delegated admin for the specified service
         Returns None if the service is invalid or not configured in this organization
         """
-        org_client = self.get_client('organizations')
+        try:
+            org_client = self.get_client('organizations')
 
-        if not hasattr(self, "org_enabled_service_principals"):
-            self.get_delegated_admin_status()
+            if not hasattr(self, "org_enabled_service_principals"):
+                self.get_delegated_admin_status()
 
-        if "amazonaws.com" not in service:
-            service += ".amazonaws.com"
+            if "amazonaws.com" not in service:
+                service += ".amazonaws.com"
 
-        if service not in self.org_enabled_service_principals:
-            logger.error(f"Service {service} is not enabled for this organization.")
-            return(None)
+            if service not in self.org_enabled_service_principals:
+                logger.error(f"Service {service} is not enabled for this organization.")
+                return(None)
 
-        admins_response = org_client.list_delegated_administrators(ServicePrincipal=service)
-        if len(admins_response['DelegatedAdministrators']) == 0:
-            return(None)
-        elif len(admins_response['DelegatedAdministrators']) > 1:
-            logger.error(f"More than one DelegatedAdministrators returned for {service}")
-            return(None)
-        else:
-            account = AWSAccount(admins_response['DelegatedAdministrators'][0]['Id'], self.config)
-            return(account)
+            admins_response = org_client.list_delegated_administrators(ServicePrincipal=service)
+            if len(admins_response['DelegatedAdministrators']) == 0:
+                return(None)
+            elif len(admins_response['DelegatedAdministrators']) > 1:
+                logger.error(f"More than one DelegatedAdministrators returned for {service}")
+                return(None)
+            else:
+                account = AWSAccount(admins_response['DelegatedAdministrators'][0]['Id'], self.config)
+                return(account)
+        except ClientError as e:
+            if e.response['Error']['Code'] == 'ConstraintViolationException':
+                logger.error(f"Error getting delegated admin for {service} from {self.account_id}: {e}")
+                return(None)
+            else:
+                raise
+
+class NotAnAWSOrganizationMaster(Exception):
+    '''Exception thrown when an account is not an Org Master account'''
