@@ -77,18 +77,24 @@ class AntiopeConfig(object):
 
 class AntiopeAssumeRoleError(Exception):
     """raised when the AssumeRole Fails"""
+    pass
 
 
 class AntiopeDatabaseError(Exception):
     """raised when there are issues interacting with the Antiope DynamoDB Tables"""
+    pass
 
 
 class AccountUpdateError(Exception):
     """raised when an update to DynamoDB Fails"""
+    pass
 
 
-class AccountLookupError(LookupError):
+class AntiopeAccountLookupError(LookupError):
     """Raised when the Account requested is not in the database"""
+    pass
+
 
 class VPCLookupError(LookupError):
     '''Raised when the VPC requested is not in the database'''
+    pass

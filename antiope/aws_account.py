@@ -48,7 +48,7 @@ class AWSAccount(object):
             self.__dict__.update(self.db_record)
             # self.account_name = str(self.account_name.encode('ascii', 'ignore'))
         except IndexError as e:
-            raise AccountLookupError("ID {} not found".format(account_id))
+            raise AntiopeAccountLookupError(f"ID {account_id} not found")
         except Exception as e:
             logger.error("Got Other error: {}".format(e))
 
@@ -280,9 +280,9 @@ class AWSAccount(object):
             )
             return(response['Item'][key])
         except ClientError as e:
-            raise AccountLookupError("Failed to get {} from {} in account table: {}".format(key, self, e))
+            raise AntiopeAccountLookupError("Failed to get {} from {} in account table: {}".format(key, self, e))
         except KeyError as e:
-            raise AccountLookupError("Failed to get {} from {} in account table: {}".format(key, self, e))
+            raise AntiopeAccountLookupError("Failed to get {} from {} in account table: {}".format(key, self, e))
 
     def delete_attribute(self, key):
         """
@@ -304,9 +304,9 @@ class AWSAccount(object):
                 # }
             )
         except ClientError as e:
-            raise AccountLookupError("Failed to get {} from {} in account table: {}".format(key, self, e))
+            raise AntiopeAccountLookupError("Failed to get {} from {} in account table: {}".format(key, self, e))
         except KeyError as e:
-            raise AccountLookupError("Failed to get {} from {} in account table: {}".format(key, self, e))
+            raise AntiopeAccountLookupError("Failed to get {} from {} in account table: {}".format(key, self, e))
 
 
 
